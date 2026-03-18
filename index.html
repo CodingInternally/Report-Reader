@@ -9,50 +9,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.5/tesseract.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-  :root { --bg:#0f1117; --surface:#1a1d27; --surface2:#242836; --border:#2e3345; --text:#e4e7ef; --text-dim:#8890a4; --accent:#4f8cff; --accent-glow:rgba(79,140,255,0.15); --success:#34d399; --fail:#f87171; --warn:#fbbf24; --row-alt:rgba(79,140,255,0.04); }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-  .app { max-width:1200px; margin:0 auto; padding:40px 24px; }
-  .header { text-align:center; margin-bottom:48px; }
-  .header h1 { font-size:2rem; font-weight:700; letter-spacing:-0.03em; background:linear-gradient(135deg,var(--accent),#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
-  .header p { color:var(--text-dim); font-size:0.95rem; }
-  .dropzone { border:2px dashed var(--border); border-radius:16px; padding:64px 32px; text-align:center; cursor:pointer; transition:all 0.3s; background:var(--surface); position:relative; overflow:hidden; }
-  .dropzone::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 50%,var(--accent-glow),transparent 70%); opacity:0; transition:opacity 0.3s; }
-  .dropzone:hover,.dropzone.dragover { border-color:var(--accent); }
-  .dropzone:hover::before,.dropzone.dragover::before { opacity:1; }
-  .dropzone-icon { font-size:3rem; margin-bottom:16px; display:block; }
-  .dropzone-text { font-size:1.1rem; font-weight:500; position:relative; z-index:1; }
-  .dropzone-sub { color:var(--text-dim); font-size:0.85rem; margin-top:8px; position:relative; z-index:1; }
-  .file-input { display:none; }
-  .status-bar { margin-top:24px; padding:16px 20px; background:var(--surface); border-radius:12px; border:1px solid var(--border); display:flex; align-items:center; gap:12px; font-family:'JetBrains Mono',monospace; font-size:0.85rem; }
-  .status-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-  .status-dot.processing { background:var(--warn); animation:pulse 1s infinite; }
-  .status-dot.done { background:var(--success); }
-  .status-dot.error { background:var(--fail); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .progress-bar { margin-top:12px; height:6px; background:var(--surface2); border-radius:3px; overflow:hidden; }
-  .progress-fill { height:100%; background:var(--accent); border-radius:3px; transition:width 0.3s; width:0%; }
-  .results { margin-top:32px; }
-  .results-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-  .results-header h2 { font-size:1.2rem; font-weight:600; }
-  .export-btn { background:var(--accent); color:#fff; border:none; padding:10px 24px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
-  .export-btn:hover { filter:brightness(1.15); transform:translateY(-1px); }
-  .table-wrap { overflow-x:auto; border-radius:12px; border:1px solid var(--border); background:var(--surface); max-height:500px; }
-  table { width:100%; border-collapse:collapse; font-size:0.85rem; white-space:nowrap; }
-  th { background:var(--surface2); padding:12px 16px; text-align:left; font-weight:600; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1; }
-  td { padding:10px 16px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:0.82rem; }
-  tr:nth-child(even) td { background:var(--row-alt); }
-  tr:last-child td { border-bottom:none; }
-  td.failed { color:var(--fail); font-weight:700; }
-  .stats { display:flex; gap:16px; margin-top:24px; flex-wrap:wrap; }
-  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 20px; flex:1; min-width:140px; }
-  .stat-card .label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); margin-bottom:4px; }
-  .stat-card .value { font-size:1.4rem; font-weight:700; font-family:'JetBrains Mono',monospace; }
-  .log { margin-top:24px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; max-height:200px; overflow-y:auto; font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--text-dim); line-height:1.6; }
-  .log-entry.warn { color:var(--warn); } .log-entry.error { color:var(--fail); } .log-entry.success { color:var(--success); }
-  .mode-toggle { display:flex; gap:8px; margin-top:16px; justify-content:center; }
-  .mode-btn { background:var(--surface); border:1px solid var(--border); color:var(--text-dim); padding:8px 16px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer; transition:all 0.2s; }
-  .mode-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2e3345;--text:#e4e7ef;--text-dim:#8890a4;--accent:#4f8cff;--accent-glow:rgba(79,140,255,0.15);--success:#34d399;--fail:#f87171;--warn:#fbbf24;--row-alt:rgba(79,140,255,0.04)}
+  *{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}.app{max-width:1200px;margin:0 auto;padding:40px 24px}.header{text-align:center;margin-bottom:48px}.header h1{font-size:2rem;font-weight:700;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--accent),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.header p{color:var(--text-dim);font-size:0.95rem}
+  .dropzone{border:2px dashed var(--border);border-radius:16px;padding:64px 32px;text-align:center;cursor:pointer;transition:all 0.3s;background:var(--surface);position:relative;overflow:hidden}.dropzone::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--accent-glow),transparent 70%);opacity:0;transition:opacity 0.3s}.dropzone:hover,.dropzone.dragover{border-color:var(--accent)}.dropzone:hover::before,.dropzone.dragover::before{opacity:1}.dropzone-icon{font-size:3rem;margin-bottom:16px;display:block}.dropzone-text{font-size:1.1rem;font-weight:500;position:relative;z-index:1}.dropzone-sub{color:var(--text-dim);font-size:0.85rem;margin-top:8px;position:relative;z-index:1}.file-input{display:none}
+  .status-bar{margin-top:24px;padding:16px 20px;background:var(--surface);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:0.85rem}.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.status-dot.processing{background:var(--warn);animation:pulse 1s infinite}.status-dot.done{background:var(--success)}.status-dot.error{background:var(--fail)}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}.progress-bar{margin-top:12px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}.progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.3s;width:0%}
+  .results{margin-top:32px}.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.results-header h2{font-size:1.2rem;font-weight:600}.export-btn{background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}.export-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);background:var(--surface);max-height:500px}table{width:100%;border-collapse:collapse;font-size:0.85rem;white-space:nowrap}th{background:var(--surface2);padding:12px 16px;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-dim);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1}td{padding:10px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:0.82rem}tr:nth-child(even) td{background:var(--row-alt)}tr:last-child td{border-bottom:none}td.failed{color:var(--fail);font-weight:700}
+  .stats{display:flex;gap:16px;margin-top:24px;flex-wrap:wrap}.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;flex:1;min-width:140px}.stat-card .label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-dim);margin-bottom:4px}.stat-card .value{font-size:1.4rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+  .log{margin-top:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;max-height:200px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.6}.log-entry.warn{color:var(--warn)}.log-entry.error{color:var(--fail)}.log-entry.success{color:var(--success)}
+  .mode-toggle{display:flex;gap:8px;margin-top:16px;justify-content:center}.mode-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s}.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -89,7 +53,7 @@
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const $=id=>document.getElementById(id);
 const dropzone=$('dropzone'),fileInput=$('fileInput'),statusArea=$('statusArea'),statusDot=$('statusDot'),statusText=$('statusText'),progressFill=$('progressFill'),logArea=$('logArea'),logEl=$('log'),resultsArea=$('resultsArea'),statsEl=$('stats'),resultsTable=$('resultsTable'),exportBtn=$('exportBtn'),renderCanvas=$('renderCanvas');
-let parsedData=null, useOCR=true;
+let parsedData=null,useOCR=true;
 
 function setMode(m){useOCR=m==='ocr';$('modeText').classList.toggle('active',!useOCR);$('modeOCR').classList.toggle('active',useOCR);}
 dropzone.addEventListener('click',()=>fileInput.click());
@@ -111,9 +75,7 @@ async function handleFile(file){
     const ab=await file.arrayBuffer();
     const pdf=await pdfjsLib.getDocument({data:ab}).promise;
     log(`PDF loaded: ${pdf.numPages} pages`,'success');
-
     if(useOCR) log('Initializing Tesseract OCR (first run downloads ~2MB model)...');
-
     const allPages=[];
     for(let i=1;i<=pdf.numPages;i++){
       setProgress(Math.round((i/pdf.numPages)*90));
@@ -121,7 +83,8 @@ async function handleFile(file){
       let text;
       if(useOCR){
         setStatus(`OCR page ${i}/${pdf.numPages}...`,'processing');
-        const scale=2.5;const vp=page.getViewport({scale});
+        const scale=3.3; // ~400 DPI for better OCR accuracy
+        const vp=page.getViewport({scale});
         renderCanvas.width=vp.width;renderCanvas.height=vp.height;
         const ctx=renderCanvas.getContext('2d');
         await page.render({canvasContext:ctx,viewport:vp}).promise;
@@ -144,159 +107,179 @@ async function handleFile(file){
   }catch(err){setStatus('Error','error');log(`Error: ${err.message}`,'error');console.error(err);}
 }
 
-/* ===== PARSER ===== */
+// ===== SECONDS VALUE PARSER (handles OCR s->5 substitution) =====
+function parseSecondsVal(raw){
+  let v=raw.replace(/:/g,'.').replace(/'/g,'').replace(/"/g,'');
+  v=v.replace(/[sS]$/,'');
+  v=v.replace(/[^0-9.]/g,'');
+  if(!v)return null;
+  let val=parseFloat(v);
+  if(v.includes('.')){
+    const dec=v.split('.')[1];
+    if(dec&&dec.length===2&&dec[1]==='5') val=parseFloat(v.slice(0,-1));
+  }
+  return isNaN(val)?null:val;
+}
+
+// ===== NORMALIZE TEST CODE (OCR variants) =====
+function normCode(raw){
+  let s=raw.trim();
+  s=s.replace(/dRV[VW]+T/gi,'dRVVT').replace(/dRWT/gi,'dRVVT');
+  s=s.replace(/^5[Cc]r-/i,'SCT-').replace(/^Sd-/i,'SCT-').replace(/^Scr-/i,'SCT-').replace(/^SCr-/i,'SCT-');
+  return s;
+}
+
+// ===== MAIN PARSER =====
 function parseAllPages(pages){
-  const rowMap=new Map(),rowOrder=[];
+  const rm=new Map(),ro=[];
   for(const pg of pages){
     const t=pg.text;
-    if(/Sample\s*Rack\s*Detail\s*Report/i.test(t)){log(`Pg ${pg.pageNum}: Rack Detail Report`);parseRackDetail(pg,rowMap,rowOrder);}
-    else if(/Sample\s*Result\s*Report/i.test(t)){log(`Pg ${pg.pageNum}: Sample Result Report`);parseSampleResult(pg,rowMap,rowOrder);}
+    if(/Sample\s*Rack\s*Detail\s*Report/i.test(t)){log(`Pg ${pg.pageNum}: Rack Detail Report`);parseRackDetail(pg,rm,ro);}
+    else if(/Sample\s*Result\s*Report/i.test(t)){log(`Pg ${pg.pageNum}: Sample Result Report`);parseSampleResult(pg,rm,ro);}
     else log(`Pg ${pg.pageNum}: Unknown format, skip`,'warn');
   }
+  // Build dynamic headers
   const tc={};
-  for(const r of rowOrder){const nc={};for(const[n]of r.tests){nc[n]=(nc[n]||0)+1;}for(const[n,c]of Object.entries(nc))tc[n]=Math.max(tc[n]||0,c);}
+  for(const r of ro){const nc={};for(const[n]of r.tests)nc[n]=(nc[n]||0)+1;for(const[n,c]of Object.entries(nc))tc[n]=Math.max(tc[n]||0,c);}
   const headers=['Instrument Serial','Sample ID'],colMap={};let ci=0;
   for(const n of Object.keys(tc).sort()){const mx=tc[n];for(let r=1;r<=mx;r++){headers.push(mx>1?`${n} Run ${r}`:n);colMap[`${n}|${r}`]=ci+2;ci++;}}
-  const rows=rowOrder.map(r=>{const cells=new Array(headers.length).fill('');cells[0]=r.serial;cells[1]=r.sampleId;const nc={};for(const[n,v]of r.tests){nc[n]=(nc[n]||0)+1;const k=`${n}|${nc[n]}`;if(colMap[k]!==undefined)cells[colMap[k]]=v;}return cells;});
+  const rows=ro.map(r=>{const cells=new Array(headers.length).fill('');cells[0]=r.serial;cells[1]=r.sampleId;const nc={};for(const[n,v]of r.tests){nc[n]=(nc[n]||0)+1;const k=`${n}|${nc[n]}`;if(colMap[k]!==undefined)cells[colMap[k]]=v;}return cells;});
   return{headers,rows};
 }
 
-/* ===== RACK DETAIL ===== */
+// ===== RACK DETAIL REPORT PARSER =====
 function parseRackDetail(pg,rowMap,rowOrder){
   const lines=pg.text.split('\n').map(l=>l.trim()).filter(l=>l);
   let serial='';
   for(const l of lines){const m=l.match(/Serial\s+(\d{5,})/i);if(m){serial=m[1];break;}}
 
-  // Strategy: collect all samples by finding "Sample ID <name>" patterns,
-  // then gather test results that follow until the next Sample ID.
-  // This avoids relying on Pos. line ordering which OCR mangles.
-  
-  const sampleStarts = []; // {lineIdx, sampleId}
-  
-  for(let li=0; li<lines.length; li++){
-    const line = lines[li];
-    // Match "Sample ID <name>" with optional "Sample type" after
-    const idM = line.match(/Sample\s*ID\s*(.*?)(?:\s+Sample\s*type|\s*$)/i);
+  // Find all Sample ID occurrences (handles "Sample 1D" OCR variant)
+  const sampleStarts=[];
+  for(let li=0;li<lines.length;li++){
+    const line=lines[li];
+    const idM=line.match(/Sample\s*[I1]D\s*(.*?)(?:\s+Sample\s*type|\s*$)/i);
     if(idM){
-      const id = idM[1] ? idM[1].trim() : '';
-      if(id && id !== '?') {
-        sampleStarts.push({lineIdx: li, sampleId: id});
-      } else {
-        // Orphan "Sample ID" with no value - look backwards for ID
-        for(let back = li - 1; back >= Math.max(0, li - 6); back--) {
-          const prev = lines[back];
-          if(/^(Sample|Pos|Free|QFA|PC|Track|Rack|Model|Serial|Page|Inserted|Stat|Patient|COMPLETED|UNKNOWN|PLACED|Test|Type|Flag|ACL|St\.|Green|835|920)/i.test(prev)) continue;
-          if(/^\d+$/.test(prev) || prev.length <= 1) continue;
-          if(prev.length < 30 && /[A-Za-z]/.test(prev) && /\d/.test(prev)) {
-            sampleStarts.push({lineIdx: li, sampleId: prev});
-            break;
+      const id=idM[1]?idM[1].trim():'';
+      if(id&&id!=='?'){
+        sampleStarts.push({lineIdx:li,sampleId:id});
+      }else{
+        // Orphan "Sample ID" — look backwards for standalone ID value
+        for(let back=li-1;back>=Math.max(0,li-6);back--){
+          const prev=lines[back];
+          if(/^(Sample|Pos|Free|QFA|PC|Track|Rack|Model|Serial|Page|Inserted|Stat|Patient|COMPLETED|UNKNOWN|PLACED|Test|Type|Flag|ACL|St\.|Green|835|920)/i.test(prev))continue;
+          if(/^\d+$/.test(prev)||prev.length<=1||/^["'#©]/.test(prev))continue;
+          if(prev.length<30&&/[A-Za-z]/.test(prev)&&/\d/.test(prev)){
+            sampleStarts.push({lineIdx:li,sampleId:prev});break;
           }
         }
       }
     }
   }
-  
-  // For each sample, gather tests and status from lines between this sample ID and the next
-  for(let si=0; si<sampleStarts.length; si++){
-    const startLine = sampleStarts[si].lineIdx;
-    const endLine = si+1 < sampleStarts.length ? sampleStarts[si+1].lineIdx : lines.length;
-    const sid = sampleStarts[si].sampleId;
-    
-    let status = null;
-    const tests = [];
-    
-    // Scan lines from this sample ID to the next
-    for(let li=startLine; li<endLine; li++){
-      const line = lines[li];
-      
-      // Check for status
-      const stM = line.match(/(?:sample\s*)?status:?\s*(COMPLETED|UNKNOWN|PLACED|FAILED)/i);
-      if(stM) status = stM[1];
-      
-      // Test result patterns
+
+  // Extract tests between each Sample ID
+  for(let si=0;si<sampleStarts.length;si++){
+    const startLine=sampleStarts[si].lineIdx;
+    const endLine=si+1<sampleStarts.length?sampleStarts[si+1].lineIdx:lines.length;
+    const sid=sampleStarts[si].sampleId;
+    let status=null;const tests=[];
+    for(let li=startLine;li<endLine;li++){
+      const line=lines[li];
+      const stM=line.match(/(?:sample\s*)?status:?\s*(COMPLETED|UNKNOWN|PLACED|FAILED)/i);
+      if(stM&&!status) status=stM[1]; // First status only!
       const tps=[
-        {re:/(?:^|\s)(Free\s*PS)\s+(FAILED|[\d.]+)\s*%?/i, nm:'Free PS'},
-        {re:/(?:^|\s)(QFA\s*Low)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i, nm:'QFA Low'},
-        {re:/(?:^|\s)(QFA)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i, nm:'QFA'},
-        {re:/(?:^|\s)(PC)\s+(FAILED|[\d.]+)\s*%?/i, nm:'PC'},
+        {re:/(?:^|\s)(Free\s*PS)\s+(FAILED|[\d.]+)\s*%?/i,nm:'Free PS'},
+        {re:/(?:^|\s)(QFA\s*Low)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i,nm:'QFA Low'},
+        {re:/(?:^|\s)(QFA)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i,nm:'QFA'},
+        {re:/(?:^|\s)(PC)\s+(FAILED|[\d.]+)\s*%?/i,nm:'PC'},
       ];
-      for(const tp of tps){
-        const m = line.match(tp.re);
-        if(m){
-          tests.push([tp.nm, m[2]==='FAILED' ? 'FAILED' : parseFloat(m[2])]);
-          break;
-        }
-      }
+      for(const tp of tps){const m=line.match(tp.re);if(m){tests.push([tp.nm,m[2]==='FAILED'?'FAILED':parseFloat(m[2])]);break;}}
     }
-    
-    // Skip if unknown/placed status
-    if(/UNKNOWN|PLACED/i.test(status||'')) continue;
-    if(tests.length === 0 && !/COMPLETED/i.test(status||'')) continue;
-    
-    const k = `${serial}|${sid}`;
-    if(rowMap.has(k)){
-      rowMap.get(k).tests.push(...tests);
-      log(`  Merged into: ${sid}`);
-    } else {
-      const r = {serial, sampleId:sid, tests:[...tests]};
-      rowMap.set(k,r);
-      rowOrder.push(r);
-      log(`  ${sid}: ${tests.length} tests`);
-    }
+    if(status&&/UNKNOWN|PLACED/i.test(status))continue;
+    if(tests.length===0&&!(status&&/COMPLETED/i.test(status)))continue;
+    const k=`${serial}|${sid}`;
+    if(rowMap.has(k)){rowMap.get(k).tests.push(...tests);log(`  Merged into: ${sid}`);}
+    else{const r={serial,sampleId:sid,tests:[...tests]};rowMap.set(k,r);rowOrder.push(r);log(`  ${sid}: ${tests.length} tests`);}
   }
 }
 
-/* ===== SAMPLE RESULT ===== */
+// ===== SAMPLE RESULT REPORT PARSER =====
 function parseSampleResult(pg,rowMap,rowOrder){
   const lines=pg.text.split('\n').map(l=>l.trim()).filter(l=>l);
   let serial='';
   for(const l of lines){const m=l.match(/Serial\s*(?:Number)?\s+(\d{5,})/i);if(m){serial=m[1];break;}}
-  let sid=null,tests=[],curCode=null;
+
+  // Broad Sample ID regex: catches OCR-mangled prefixes like "ple ID:", "e.. ID:", "©... ID:"
+  const sidRe=/[I1]D:?\s+([A-Z0-9][A-Z0-9]{3,})/i;
+  // Test code regex with seconds value
+  const codeRe=/^((?:SCT|dRVVT|dRVWT|dRVWVT|dRWT|5[Cc]r|Sd|Scr|SCr)[\s-]*[SC]?)\s+([\d.:\']+)\s*'?[sS5]?\b/i;
+  // Test code with bare number (no s unit)
+  const codeRe2=/^((?:SCT|dRVVT|dRVWT|dRWT|5[Cc]r|Sd|Scr|SCr)[\s-]*[SC]?)\s+([\d.]+)\s*$/i;
+  // Test code with garbled value (still captures code name)
+  const codeRe3=/^((?:SCT|dRVVT|dRVWT|dRWT|5[Cc]r|Sd|Scr|SCr)[\s-]*[SC]?)\s+/i;
+
+  let sid=null,tests=[],cc=null;
 
   function flush(){
-    if(!sid||tests.length===0)return;
-    const k=`${serial}|${sid}`;
-    if(rowMap.has(k)){rowMap.get(k).tests.push(...tests);log(`  Merged: ${sid}`);}
-    else{const r={serial,sampleId:sid,tests:[...tests]};rowMap.set(k,r);rowOrder.push(r);log(`  ${sid}: ${tests.length} values`);}
+    if(sid&&tests.length>0){
+      const k=`${serial}|${sid}`;
+      if(rowMap.has(k)){rowMap.get(k).tests.push(...tests);log(`  Merged: ${sid}`);}
+      else{const r={serial,sampleId:sid,tests:[...tests]};rowMap.set(k,r);rowOrder.push(r);log(`  ${sid}: ${tests.length} values`);}
+    }
+    sid=null;tests=[];cc=null;
   }
-
-  function normCode(raw){
-    let s=raw.trim();
-    s=s.replace(/dRV[VW]+T/gi,'dRVVT').replace(/dRWT/gi,'dRVVT');
-    s=s.replace(/^5[Cc]r-/i,'SCT-').replace(/^Sd-/i,'SCT-').replace(/^Scr-/i,'SCT-').replace(/^SCr-/i,'SCT-');
-    return s;
-  }
-
-  // Regex: test code at line start, then a seconds value
-  // Handles OCR reading "s" as "5": "29.75" = 29.7s, "51:5's" = 51.5s
-  const codeLineRe=/^((?:SCT|dRVVT|dRVWT|dRVWVT|dRWT|5[Cc]r|Sd|Scr|SCr)[\s-]*[SC]?)\s+([\d.:]+)\s*'?s?5?\b/i;
 
   for(const line of lines){
-    const idM=line.match(/(?:S|s)?(?:a)?mple\s*ID:?\s+([A-Z0-9][A-Z0-9]+)/i);
-    if(idM){flush();sid=idM[1].trim();tests=[];curCode=null;continue;}
-    if(!sid)continue;
-    if(/^(Test Code|Page \d|Sample Result|Instrument|Serial|Hospital|Address|City|Zipcode|Rack|Position|Type|Flag|Completed|Validated|First Name|Last Name|Patient|\.)/i.test(line))continue;
+    // Skip metadata lines
+    if(/^(Test Code|Page \d|Sample Result|Instrument|Serial|Hospital|Address|City|Zipcode|Type|Flag|Completed|Validated|First Name|Last Name|Bamp)/i.test(line))continue;
     if(/^\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}:\d{2}/.test(line))continue;
 
-    const cm=line.match(codeLineRe);
+    // Check for Sample ID
+    const idM=sidRe.exec(line);
+    if(idM&&!/^(Test|Rack|Position|Type)/i.test(line)){
+      const candidate=idM[1].trim();
+      if(candidate.length>=6&&/\d/.test(candidate)){
+        flush();sid=candidate;continue;
+      }
+    }
+    if(!sid)continue;
+
+    // Test code + seconds value
+    let cm=codeRe.exec(line);
     if(cm){
-      const code=normCode(cm[1]);
-      let val=cm[2].replace(/:/g,'.').replace(/[^0-9.]/g,'');
-      const sec=parseFloat(val);
-      if(!isNaN(sec)&&sec<1000){curCode=code;tests.push([`${code} s`,sec]);}
+      const code=normCode(cm[1]);const sec=parseSecondsVal(cm[2]);
+      if(sec&&sec<1000){cc=code;tests.push([`${code} s`,sec]);}
+      else cc=code; // Set code even if seconds garbled
       continue;
     }
+    // Test code + bare number
+    cm=codeRe2.exec(line);
+    if(cm){
+      const code=normCode(cm[1]);const sec=parseFloat(cm[2]);
+      if(sec<1000){cc=code;tests.push([`${code} s`,sec]);}
+      continue;
+    }
+    // Test code with garbled value — still set cc for subsequent Ratio/TR
+    cm=codeRe3.exec(line);
+    if(cm){
+      const code=normCode(cm[1]);
+      const rest=line.substring(cm[0].length);
+      const nm=rest.match(/([\d.]+)/);
+      if(nm){const sec=parseSecondsVal(nm[1]);if(sec&&sec<1000){cc=code;tests.push([`${code} s`,sec]);continue;}}
+      cc=code;continue;
+    }
 
-    const rm=line.match(/^([\d.]+)\s*Ratio/);
-    if(rm&&curCode){tests.push([`${curCode} Ratio`,parseFloat(rm[1])]);continue;}
+    // Ratio line (handles "mea 0.90 Ratio" OCR artifact)
+    const rm=line.match(/^(?:mea\s+)?([\d.]+)\s*Ratio/);
+    if(rm&&cc){tests.push([`${cc} Ratio`,parseFloat(rm[1])]);continue;}
 
+    // TR line
     const tm=line.match(/^([\d.]+)\s*TR\b/);
-    if(tm&&curCode){tests.push([`${curCode} TR`,parseFloat(tm[1])]);continue;}
+    if(tm&&cc){tests.push([`${cc} TR`,parseFloat(tm[1])]);continue;}
   }
   flush();
 }
 
-/* ===== RENDER & EXPORT ===== */
+// ===== RENDER & EXPORT =====
 function renderResults(){
   if(!parsedData)return;resultsArea.style.display='block';
   const sers=new Set(parsedData.rows.map(r=>r[0]));
@@ -306,7 +289,6 @@ function renderResults(){
   for(const r of parsedData.rows){h+='<tr>';for(const c of r)h+=c==='FAILED'?'<td class="failed">FAILED</td>':`<td>${c}</td>`;h+='</tr>';}
   h+='</tbody>';resultsTable.innerHTML=h;
 }
-
 function exportToExcel(){
   if(!parsedData)return;
   const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet([parsedData.headers,...parsedData.rows]);
