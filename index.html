@@ -166,27 +166,84 @@ function parseRackDetail(pg,rowMap,rowOrder){
   const lines=pg.text.split('\n').map(l=>l.trim()).filter(l=>l);
   let serial='';
   for(const l of lines){const m=l.match(/Serial\s+(\d{5,})/i);if(m){serial=m[1];break;}}
-  let sid=null,status=null,tests=[];
-  function flush(){
-    if(!sid||sid==='?'||/UNKNOWN|PLACED/i.test(status||''))return;
-    const k=`${serial}|${sid}`;
-    if(rowMap.has(k)){rowMap.get(k).tests.push(...tests);log(`  Merged into: ${sid}`);}
-    else{const r={serial,sampleId:sid,tests:[...tests]};rowMap.set(k,r);rowOrder.push(r);log(`  ${sid}: ${tests.length} tests`);}
+
+  // Strategy: collect all samples by finding "Sample ID <name>" patterns,
+  // then gather test results that follow until the next Sample ID.
+  // This avoids relying on Pos. line ordering which OCR mangles.
+  
+  const sampleStarts = []; // {lineIdx, sampleId}
+  
+  for(let li=0; li<lines.length; li++){
+    const line = lines[li];
+    // Match "Sample ID <name>" with optional "Sample type" after
+    const idM = line.match(/Sample\s*ID\s*(.*?)(?:\s+Sample\s*type|\s*$)/i);
+    if(idM){
+      const id = idM[1] ? idM[1].trim() : '';
+      if(id && id !== '?') {
+        sampleStarts.push({lineIdx: li, sampleId: id});
+      } else {
+        // Orphan "Sample ID" with no value - look backwards for ID
+        for(let back = li - 1; back >= Math.max(0, li - 6); back--) {
+          const prev = lines[back];
+          if(/^(Sample|Pos|Free|QFA|PC|Track|Rack|Model|Serial|Page|Inserted|Stat|Patient|COMPLETED|UNKNOWN|PLACED|Test|Type|Flag|ACL|St\.|Green|835|920)/i.test(prev)) continue;
+          if(/^\d+$/.test(prev) || prev.length <= 1) continue;
+          if(prev.length < 30 && /[A-Za-z]/.test(prev) && /\d/.test(prev)) {
+            sampleStarts.push({lineIdx: li, sampleId: prev});
+            break;
+          }
+        }
+      }
+    }
   }
-  for(const line of lines){
-    if(/^Pos\.\s*\d+/i.test(line)){flush();sid=null;status=null;tests=[];}
-    const idM=line.match(/Sample\s*ID\s+(.+?)(?:\s+Sample\s*type|\s*$)/i);
-    if(idM){const id=idM[1].trim();if(id!=='?'&&!sid)sid=id;}
-    const stM=line.match(/[Ss]ample\s*status:?\s*(\w+)/);if(stM)status=stM[1];
-    const tps=[
-      {re:/^(Free\s*PS)\s+(FAILED|[\d.]+)\s*%?/i,nm:'Free PS'},
-      {re:/^(QFA\s*Low)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i,nm:'QFA Low'},
-      {re:/^(QFA)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i,nm:'QFA'},
-      {re:/^(PC)\s+(FAILED|[\d.]+)\s*%?/i,nm:'PC'},
-    ];
-    for(const tp of tps){const m=line.match(tp.re);if(m){tests.push([tp.nm,m[2]==='FAILED'?'FAILED':parseFloat(m[2])]);break;}}
+  
+  // For each sample, gather tests and status from lines between this sample ID and the next
+  for(let si=0; si<sampleStarts.length; si++){
+    const startLine = sampleStarts[si].lineIdx;
+    const endLine = si+1 < sampleStarts.length ? sampleStarts[si+1].lineIdx : lines.length;
+    const sid = sampleStarts[si].sampleId;
+    
+    let status = null;
+    const tests = [];
+    
+    // Scan lines from this sample ID to the next
+    for(let li=startLine; li<endLine; li++){
+      const line = lines[li];
+      
+      // Check for status
+      const stM = line.match(/(?:sample\s*)?status:?\s*(COMPLETED|UNKNOWN|PLACED|FAILED)/i);
+      if(stM) status = stM[1];
+      
+      // Test result patterns
+      const tps=[
+        {re:/(?:^|\s)(Free\s*PS)\s+(FAILED|[\d.]+)\s*%?/i, nm:'Free PS'},
+        {re:/(?:^|\s)(QFA\s*Low)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i, nm:'QFA Low'},
+        {re:/(?:^|\s)(QFA)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i, nm:'QFA'},
+        {re:/(?:^|\s)(PC)\s+(FAILED|[\d.]+)\s*%?/i, nm:'PC'},
+      ];
+      for(const tp of tps){
+        const m = line.match(tp.re);
+        if(m){
+          tests.push([tp.nm, m[2]==='FAILED' ? 'FAILED' : parseFloat(m[2])]);
+          break;
+        }
+      }
+    }
+    
+    // Skip if unknown/placed status
+    if(/UNKNOWN|PLACED/i.test(status||'')) continue;
+    if(tests.length === 0 && !/COMPLETED/i.test(status||'')) continue;
+    
+    const k = `${serial}|${sid}`;
+    if(rowMap.has(k)){
+      rowMap.get(k).tests.push(...tests);
+      log(`  Merged into: ${sid}`);
+    } else {
+      const r = {serial, sampleId:sid, tests:[...tests]};
+      rowMap.set(k,r);
+      rowOrder.push(r);
+      log(`  ${sid}: ${tests.length} tests`);
+    }
   }
-  flush();
 }
 
 /* ===== SAMPLE RESULT ===== */
