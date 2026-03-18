@@ -8,15 +8,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.5/tesseract.min.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-  :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2e3345;--text:#e4e7ef;--text-dim:#8890a4;--accent:#4f8cff;--accent-glow:rgba(79,140,255,0.15);--success:#34d399;--fail:#f87171;--warn:#fbbf24;--row-alt:rgba(79,140,255,0.04)}
-  *{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}.app{max-width:1200px;margin:0 auto;padding:40px 24px}.header{text-align:center;margin-bottom:48px}.header h1{font-size:2rem;font-weight:700;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--accent),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.header p{color:var(--text-dim);font-size:0.95rem}
-  .dropzone{border:2px dashed var(--border);border-radius:16px;padding:64px 32px;text-align:center;cursor:pointer;transition:all 0.3s;background:var(--surface);position:relative;overflow:hidden}.dropzone::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--accent-glow),transparent 70%);opacity:0;transition:opacity 0.3s}.dropzone:hover,.dropzone.dragover{border-color:var(--accent)}.dropzone:hover::before,.dropzone.dragover::before{opacity:1}.dropzone-icon{font-size:3rem;margin-bottom:16px;display:block}.dropzone-text{font-size:1.1rem;font-weight:500;position:relative;z-index:1}.dropzone-sub{color:var(--text-dim);font-size:0.85rem;margin-top:8px;position:relative;z-index:1}.file-input{display:none}
-  .status-bar{margin-top:24px;padding:16px 20px;background:var(--surface);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:0.85rem}.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.status-dot.processing{background:var(--warn);animation:pulse 1s infinite}.status-dot.done{background:var(--success)}.status-dot.error{background:var(--fail)}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}.progress-bar{margin-top:12px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}.progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.3s;width:0%}
-  .results{margin-top:32px}.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.results-header h2{font-size:1.2rem;font-weight:600}.export-btn{background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}.export-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);background:var(--surface);max-height:500px}table{width:100%;border-collapse:collapse;font-size:0.85rem;white-space:nowrap}th{background:var(--surface2);padding:12px 16px;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-dim);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1}td{padding:10px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:0.82rem}tr:nth-child(even) td{background:var(--row-alt)}tr:last-child td{border-bottom:none}td.failed{color:var(--fail);font-weight:700}
-  .stats{display:flex;gap:16px;margin-top:24px;flex-wrap:wrap}.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;flex:1;min-width:140px}.stat-card .label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-dim);margin-bottom:4px}.stat-card .value{font-size:1.4rem;font-weight:700;font-family:'JetBrains Mono',monospace}
-  .log{margin-top:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;max-height:200px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.6}.log-entry.warn{color:var(--warn)}.log-entry.error{color:var(--fail)}.log-entry.success{color:var(--success)}
-  .mode-toggle{display:flex;gap:8px;margin-top:16px;justify-content:center}.mode-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s}.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#242836;--border:#2e3345;--text:#e4e7ef;--text-dim:#8890a4;--accent:#4f8cff;--accent-glow:rgba(79,140,255,0.15);--success:#34d399;--fail:#f87171;--warn:#fbbf24;--row-alt:rgba(79,140,255,0.04)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}.app{max-width:1200px;margin:0 auto;padding:40px 24px}.header{text-align:center;margin-bottom:48px}.header h1{font-size:2rem;font-weight:700;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--accent),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}.header p{color:var(--text-dim);font-size:0.95rem}
+.dropzone{border:2px dashed var(--border);border-radius:16px;padding:64px 32px;text-align:center;cursor:pointer;transition:all 0.3s;background:var(--surface);position:relative;overflow:hidden}.dropzone::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,var(--accent-glow),transparent 70%);opacity:0;transition:opacity 0.3s}.dropzone:hover,.dropzone.dragover{border-color:var(--accent)}.dropzone:hover::before,.dropzone.dragover::before{opacity:1}.dropzone-icon{font-size:3rem;margin-bottom:16px;display:block}.dropzone-text{font-size:1.1rem;font-weight:500;position:relative;z-index:1}.dropzone-sub{color:var(--text-dim);font-size:0.85rem;margin-top:8px;position:relative;z-index:1}.file-input{display:none}
+.status-bar{margin-top:24px;padding:16px 20px;background:var(--surface);border-radius:12px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:0.85rem}.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.status-dot.processing{background:var(--warn);animation:pulse 1s infinite}.status-dot.done{background:var(--success)}.status-dot.error{background:var(--fail)}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}.progress-bar{margin-top:12px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}.progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.3s;width:0%}
+.results{margin-top:32px}.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.results-header h2{font-size:1.2rem;font-weight:600}.export-btn{background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}.export-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);background:var(--surface);max-height:500px}table{width:100%;border-collapse:collapse;font-size:0.85rem;white-space:nowrap}th{background:var(--surface2);padding:12px 16px;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-dim);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1}td{padding:10px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:0.82rem}tr:nth-child(even) td{background:var(--row-alt)}tr:last-child td{border-bottom:none}td.failed{color:var(--fail);font-weight:700}
+.stats{display:flex;gap:16px;margin-top:24px;flex-wrap:wrap}.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;flex:1;min-width:140px}.stat-card .label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-dim);margin-bottom:4px}.stat-card .value{font-size:1.4rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.log{margin-top:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;max-height:200px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-dim);line-height:1.6}.log-entry.warn{color:var(--warn)}.log-entry.error{color:var(--fail)}.log-entry.success{color:var(--success)}
+.mode-toggle{display:flex;gap:8px;margin-top:16px;justify-content:center}.mode-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s}.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.warn-banner{margin-top:16px;padding:14px 20px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:12px;color:var(--warn);font-size:0.9rem;line-height:1.5}
 </style>
 </head>
 <body>
@@ -40,6 +41,7 @@
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </div>
   <div id="logArea" style="display:none"><div class="log" id="log"></div></div>
+  <div id="warnArea" style="display:none"></div>
   <div id="resultsArea" style="display:none">
     <div class="stats" id="stats"></div>
     <div class="results">
@@ -52,24 +54,24 @@
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 const $=id=>document.getElementById(id);
-const dropzone=$('dropzone'),fileInput=$('fileInput'),statusArea=$('statusArea'),statusDot=$('statusDot'),statusText=$('statusText'),progressFill=$('progressFill'),logArea=$('logArea'),logEl=$('log'),resultsArea=$('resultsArea'),statsEl=$('stats'),resultsTable=$('resultsTable'),exportBtn=$('exportBtn'),renderCanvas=$('renderCanvas');
 let parsedData=null,useOCR=true;
 
 function setMode(m){useOCR=m==='ocr';$('modeText').classList.toggle('active',!useOCR);$('modeOCR').classList.toggle('active',useOCR);}
-dropzone.addEventListener('click',()=>fileInput.click());
-dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('dragover');});
-dropzone.addEventListener('dragleave',()=>dropzone.classList.remove('dragover'));
-dropzone.addEventListener('drop',e=>{e.preventDefault();dropzone.classList.remove('dragover');if(e.dataTransfer.files.length)handleFile(e.dataTransfer.files[0]);});
-fileInput.addEventListener('change',e=>{if(e.target.files.length)handleFile(e.target.files[0]);});
-exportBtn.addEventListener('click',exportToExcel);
+$('dropzone').addEventListener('click',()=>$('fileInput').click());
+$('dropzone').addEventListener('dragover',e=>{e.preventDefault();$('dropzone').classList.add('dragover');});
+$('dropzone').addEventListener('dragleave',()=>$('dropzone').classList.remove('dragover'));
+$('dropzone').addEventListener('drop',e=>{e.preventDefault();$('dropzone').classList.remove('dragover');if(e.dataTransfer.files.length)handleFile(e.dataTransfer.files[0]);});
+$('fileInput').addEventListener('change',e=>{if(e.target.files.length)handleFile(e.target.files[0]);});
+$('exportBtn').addEventListener('click',exportToExcel);
 
-function log(msg,type=''){logArea.style.display='block';const d=document.createElement('div');d.className='log-entry '+type;d.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;logEl.appendChild(d);logEl.scrollTop=logEl.scrollHeight;}
-function setStatus(t,s){statusArea.style.display='block';statusText.textContent=t;statusDot.className='status-dot '+s;}
-function setProgress(p){progressFill.style.width=p+'%';}
+function log(msg,type=''){$('logArea').style.display='block';const d=document.createElement('div');d.className='log-entry '+type;d.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;$('log').appendChild(d);$('log').scrollTop=$('log').scrollHeight;}
+function setStatus(t,s){$('statusArea').style.display='block';$('statusText').textContent=t;$('statusDot').className='status-dot '+s;}
+function setProgress(p){$('progressFill').style.width=p+'%';}
 
 async function handleFile(file){
   if(!file.name.toLowerCase().endsWith('.pdf')){log('Not a PDF','error');return;}
-  logEl.innerHTML='';resultsArea.style.display='none';setStatus('Loading PDF...','processing');setProgress(0);
+  $('log').innerHTML='';$('resultsArea').style.display='none';$('warnArea').style.display='none';$('warnArea').innerHTML='';
+  setStatus('Loading PDF...','processing');setProgress(0);
   log(`Loading: ${file.name} (${(file.size/1024).toFixed(1)} KB)`);
   try{
     const ab=await file.arrayBuffer();
@@ -83,12 +85,11 @@ async function handleFile(file){
       let text;
       if(useOCR){
         setStatus(`OCR page ${i}/${pdf.numPages}...`,'processing');
-        const scale=3.3; // ~400 DPI for better OCR accuracy
+        const scale=3.3;
         const vp=page.getViewport({scale});
-        renderCanvas.width=vp.width;renderCanvas.height=vp.height;
-        const ctx=renderCanvas.getContext('2d');
-        await page.render({canvasContext:ctx,viewport:vp}).promise;
-        const blob=await new Promise(r=>renderCanvas.toBlob(r,'image/png'));
+        const c=$('renderCanvas');c.width=vp.width;c.height=vp.height;
+        await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+        const blob=await new Promise(r=>c.toBlob(r,'image/png'));
         const res=await Tesseract.recognize(blob,'eng');
         text=res.data.text;
       }else{
@@ -103,25 +104,24 @@ async function handleFile(file){
     if(parsedData.rows.length===0){setStatus('No data found','error');log('No supported reports detected','warn');return;}
     setStatus(`Done! ${parsedData.rows.length} samples`,'done');
     log(`Complete: ${parsedData.rows.length} samples, ${parsedData.headers.length-2} test columns`,'success');
+    if(parsedData.unparsedPages.length>0){
+      const wp=parsedData.unparsedPages;
+      log(`Pages ${wp.join(', ')} could not be auto-parsed — review manually`,'warn');
+      $('warnArea').style.display='block';
+      $('warnArea').innerHTML=`<div class="warn-banner">⚠️ Page(s) ${wp.join(', ')} contain Sample Result Reports with complex multi-column layouts that could not be automatically parsed. Please review these pages manually and add any missing rerun data to the exported spreadsheet.</div>`;
+    }
     renderResults();
   }catch(err){setStatus('Error','error');log(`Error: ${err.message}`,'error');console.error(err);}
 }
 
-// ===== SECONDS VALUE PARSER (handles OCR s->5 substitution) =====
+/* ===== HELPERS ===== */
 function parseSecondsVal(raw){
   let v=raw.replace(/:/g,'.').replace(/'/g,'').replace(/"/g,'');
-  v=v.replace(/[sS]$/,'');
-  v=v.replace(/[^0-9.]/g,'');
-  if(!v)return null;
-  let val=parseFloat(v);
-  if(v.includes('.')){
-    const dec=v.split('.')[1];
-    if(dec&&dec.length===2&&dec[1]==='5') val=parseFloat(v.slice(0,-1));
-  }
+  v=v.replace(/[sS]$/,'');v=v.replace(/[^0-9.]/g,'');
+  if(!v)return null;let val=parseFloat(v);
+  if(v.includes('.')){const d=v.split('.')[1];if(d&&d.length===2&&d[1]==='5')val=parseFloat(v.slice(0,-1));}
   return isNaN(val)?null:val;
 }
-
-// ===== NORMALIZE TEST CODE (OCR variants) =====
 function normCode(raw){
   let s=raw.trim();
   s=s.replace(/dRV[VW]+T/gi,'dRVVT').replace(/dRWT/gi,'dRVVT');
@@ -129,165 +129,152 @@ function normCode(raw){
   return s;
 }
 
-// ===== MAIN PARSER =====
+/* ===== MAIN PARSER ===== */
 function parseAllPages(pages){
-  const rm=new Map(),ro=[];
+  const rm=new Map(),ro=[],unparsedPages=[];
   for(const pg of pages){
     const t=pg.text;
-    if(/Sample\s*Rack\s*Detail\s*Report/i.test(t)){log(`Pg ${pg.pageNum}: Rack Detail Report`);parseRackDetail(pg,rm,ro);}
-    else if(/Sample\s*Result\s*Report/i.test(t)){log(`Pg ${pg.pageNum}: Sample Result Report`);parseSampleResult(pg,rm,ro);}
-    else log(`Pg ${pg.pageNum}: Unknown format, skip`,'warn');
+    if(/Sample\s*Rack\s*Detail\s*Report/i.test(t)){
+      log(`Pg ${pg.pageNum}: Rack Detail Report`);
+      parseRackDetail(pg,rm,ro);
+    }else if(/Sample\s*Result\s*Report/i.test(t)){
+      const before=ro.length;
+      let mergedAny=false;
+      parseSampleResult(pg,rm,ro,()=>{mergedAny=true;});
+      if(ro.length===before&&!mergedAny){
+        log(`Pg ${pg.pageNum}: Sample Result Report — ⚠️ Could not extract data (complex layout)`,'warn');
+        unparsedPages.push(pg.pageNum);
+      }else{
+        log(`Pg ${pg.pageNum}: Sample Result Report`);
+      }
+    }else{
+      log(`Pg ${pg.pageNum}: Unknown format, skip`,'warn');
+    }
   }
-  // Build dynamic headers
+  // Build headers
   const tc={};
   for(const r of ro){const nc={};for(const[n]of r.tests)nc[n]=(nc[n]||0)+1;for(const[n,c]of Object.entries(nc))tc[n]=Math.max(tc[n]||0,c);}
   const headers=['Instrument Serial','Sample ID'],colMap={};let ci=0;
   for(const n of Object.keys(tc).sort()){const mx=tc[n];for(let r=1;r<=mx;r++){headers.push(mx>1?`${n} Run ${r}`:n);colMap[`${n}|${r}`]=ci+2;ci++;}}
   const rows=ro.map(r=>{const cells=new Array(headers.length).fill('');cells[0]=r.serial;cells[1]=r.sampleId;const nc={};for(const[n,v]of r.tests){nc[n]=(nc[n]||0)+1;const k=`${n}|${nc[n]}`;if(colMap[k]!==undefined)cells[colMap[k]]=v;}return cells;});
-  return{headers,rows};
+  return{headers,rows,unparsedPages};
 }
 
-// ===== RACK DETAIL REPORT PARSER =====
+/* ===== RACK DETAIL REPORT ===== */
 function parseRackDetail(pg,rowMap,rowOrder){
   const lines=pg.text.split('\n').map(l=>l.trim()).filter(l=>l);
   let serial='';
-  for(const l of lines){const m=l.match(/Serial\s+(\d{5,})/i);if(m){serial=m[1];break;}}
-
-  // Find all Sample ID occurrences (handles "Sample 1D" OCR variant)
+  for(let li=0;li<lines.length;li++){
+    const l=lines[li];
+    const m=l.match(/Serial\s+(\d{5,})/i);
+    if(m){serial=m[1];break;}
+    if(/^Serial$/i.test(l.trim())){for(let n=li+1;n<Math.min(li+4,lines.length);n++){const nm=lines[n].match(/^(\d{5,})/);if(nm){serial=nm[1];break;}}if(serial)break;}
+  }
   const sampleStarts=[];
   for(let li=0;li<lines.length;li++){
     const line=lines[li];
     const idM=line.match(/Sample\s*[I1]D\s*(.*?)(?:\s+Sample\s*type|\s*$)/i);
     if(idM){
       const id=idM[1]?idM[1].trim():'';
-      if(id&&id!=='?'){
-        sampleStarts.push({lineIdx:li,sampleId:id});
-      }else{
-        // Orphan "Sample ID" — look backwards for standalone ID value
-        for(let back=li-1;back>=Math.max(0,li-6);back--){
-          const prev=lines[back];
-          if(/^(Sample|Pos|Free|QFA|PC|Track|Rack|Model|Serial|Page|Inserted|Stat|Patient|COMPLETED|UNKNOWN|PLACED|Test|Type|Flag|ACL|St\.|Green|835|920)/i.test(prev))continue;
-          if(/^\d+$/.test(prev)||prev.length<=1||/^["'#©]/.test(prev))continue;
-          if(prev.length<30&&/[A-Za-z]/.test(prev)&&/\d/.test(prev)){
-            sampleStarts.push({lineIdx:li,sampleId:prev});break;
-          }
+      if(id&&id!=='?') sampleStarts.push({lineIdx:li,sampleId:id});
+      else{
+        for(let b=li-1;b>=Math.max(0,li-6);b--){
+          const p=lines[b];
+          if(/^(Sample|Pos|Free|QFA|PC|Track|Rack|Model|Serial|Page|Inserted|Stat|Patient|COMPLETED|UNKNOWN|PLACED|Test|Type|Flag|ACL|St\.|Green|835|920)/i.test(p))continue;
+          if(/^\d+$/.test(p)||p.length<=1||/^["'#©]/.test(p))continue;
+          if(p.length<30&&/[A-Za-z]/.test(p)&&/\d/.test(p)){sampleStarts.push({lineIdx:li,sampleId:p});break;}
         }
       }
     }
   }
-
-  // Extract tests between each Sample ID
   for(let si=0;si<sampleStarts.length;si++){
-    const startLine=sampleStarts[si].lineIdx;
-    const endLine=si+1<sampleStarts.length?sampleStarts[si+1].lineIdx:lines.length;
-    const sid=sampleStarts[si].sampleId;
-    let status=null;const tests=[];
-    for(let li=startLine;li<endLine;li++){
+    const start=sampleStarts[si].lineIdx,end=si+1<sampleStarts.length?sampleStarts[si+1].lineIdx:lines.length;
+    const sid=sampleStarts[si].sampleId;let status=null;const tests=[];
+    for(let li=start;li<end;li++){
       const line=lines[li];
       const stM=line.match(/(?:sample\s*)?status:?\s*(COMPLETED|UNKNOWN|PLACED|FAILED)/i);
-      if(stM&&!status) status=stM[1]; // First status only!
-      const tps=[
+      if(stM&&!status)status=stM[1];
+      for(const{re,nm}of[
         {re:/(?:^|\s)(Free\s*PS)\s+(FAILED|[\d.]+)\s*%?/i,nm:'Free PS'},
         {re:/(?:^|\s)(QFA\s*Low)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i,nm:'QFA Low'},
         {re:/(?:^|\s)(QFA)\s+(FAILED|[\d.]+)\s*(?:mg\/dL)?/i,nm:'QFA'},
-        {re:/(?:^|\s)(PC)\s+(FAILED|[\d.]+)\s*%?/i,nm:'PC'},
-      ];
-      for(const tp of tps){const m=line.match(tp.re);if(m){tests.push([tp.nm,m[2]==='FAILED'?'FAILED':parseFloat(m[2])]);break;}}
+        {re:/(?:^|\s)(PC)\s+(FAILED|[\d.]+)\s*%?/i,nm:'PC'}
+      ]){const m=line.match(re);if(m){tests.push([nm,m[2]==='FAILED'?'FAILED':parseFloat(m[2])]);break;}}
     }
     if(status&&/UNKNOWN|PLACED/i.test(status))continue;
-    if(tests.length===0&&!(status&&/COMPLETED/i.test(status)))continue;
+    if(!tests.length&&!(status&&/COMPLETED/i.test(status)))continue;
     const k=`${serial}|${sid}`;
     if(rowMap.has(k)){rowMap.get(k).tests.push(...tests);log(`  Merged into: ${sid}`);}
     else{const r={serial,sampleId:sid,tests:[...tests]};rowMap.set(k,r);rowOrder.push(r);log(`  ${sid}: ${tests.length} tests`);}
   }
 }
 
-// ===== SAMPLE RESULT REPORT PARSER =====
-function parseSampleResult(pg,rowMap,rowOrder){
+/* ===== SAMPLE RESULT REPORT ===== */
+function parseSampleResult(pg,rowMap,rowOrder,onMerge){
   const lines=pg.text.split('\n').map(l=>l.trim()).filter(l=>l);
   let serial='';
-  for(const l of lines){const m=l.match(/Serial\s*(?:Number)?\s+(\d{5,})/i);if(m){serial=m[1];break;}}
-
-  // Broad Sample ID regex: catches OCR-mangled prefixes like "ple ID:", "e.. ID:", "©... ID:"
-  const sidRe=/[I1]D:?\s+([A-Z0-9][A-Z0-9]{3,})/i;
-  // Test code regex with seconds value
-  const codeRe=/^((?:SCT|dRVVT|dRVWT|dRVWVT|dRWT|5[Cc]r|Sd|Scr|SCr)[\s-]*[SC]?)\s+([\d.:\']+)\s*'?[sS5]?\b/i;
-  // Test code with bare number (no s unit)
+  for(let li=0;li<lines.length;li++){
+    const l=lines[li];
+    const m=l.match(/Serial\s*(?:Number)?\s+(\d{5,})/i);
+    if(m){serial=m[1];break;}
+    if(/^Serial\s*(?:Number)?$/i.test(l.trim())){for(let n=li+1;n<Math.min(li+4,lines.length);n++){const nm=lines[n].match(/^(\d{5,})/);if(nm){serial=nm[1];break;}}if(serial)break;}
+  }
+  const sidRe=/[I1]D:?\s+([A-Za-z0-9][A-Za-z0-9._: -]{2,}?)\s*(?:First|Last|Rack|$)/i;
+  const sidRe2=/Sample\s*[I1]D:?\s+[_\u2014-]*\s*([a-zA-Z][a-zA-Z0-9 .:_-]+)/i;
+  const codeRe=/^((?:SCT|dRVVT|dRVWT|dRVWVT|dRWT|5[Cc]r|Sd|Scr|SCr)[\s-]*[SC]?)\s+([\d.:']+)\s*'?[sS5]?\b/i;
   const codeRe2=/^((?:SCT|dRVVT|dRVWT|dRWT|5[Cc]r|Sd|Scr|SCr)[\s-]*[SC]?)\s+([\d.]+)\s*$/i;
-  // Test code with garbled value (still captures code name)
   const codeRe3=/^((?:SCT|dRVVT|dRVWT|dRWT|5[Cc]r|Sd|Scr|SCr)[\s-]*[SC]?)\s+/i;
-
   let sid=null,tests=[],cc=null;
-
   function flush(){
-    if(sid&&tests.length>0){
-      const k=`${serial}|${sid}`;
-      if(rowMap.has(k)){rowMap.get(k).tests.push(...tests);log(`  Merged: ${sid}`);}
-      else{const r={serial,sampleId:sid,tests:[...tests]};rowMap.set(k,r);rowOrder.push(r);log(`  ${sid}: ${tests.length} values`);}
-    }
+    if(!sid||!tests.length)return;
+    const k=`${serial}|${sid}`;
+    if(rowMap.has(k)){rowMap.get(k).tests.push(...tests);if(onMerge)onMerge();log(`  Merged: ${sid}`);}
+    else{rowMap.set(k,{serial,sampleId:sid,tests:[...tests]});rowOrder.push(rowMap.get(k));log(`  ${sid}: ${tests.length} values`);}
     sid=null;tests=[];cc=null;
   }
-
   for(const line of lines){
-    // Skip metadata lines
     if(/^(Test Code|Page \d|Sample Result|Instrument|Serial|Hospital|Address|City|Zipcode|Type|Flag|Completed|Validated|First Name|Last Name|Bamp)/i.test(line))continue;
     if(/^\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}:\d{2}/.test(line))continue;
-
-    // Check for Sample ID
-    const idM=sidRe.exec(line);
+    const idM=sidRe.exec(line)||sidRe2.exec(line);
     if(idM&&!/^(Test|Rack|Position|Type)/i.test(line)){
-      const candidate=idM[1].trim();
-      if(candidate.length>=6&&/\d/.test(candidate)){
-        flush();sid=candidate;continue;
-      }
+      let candidate=idM[1].trim().replace(/^[_\u2014\-\s]+/,'').replace(/[_\u2014\-\s]+$/,'');
+      if(candidate.length>=3){flush();sid=candidate;continue;}
     }
     if(!sid)continue;
-
-    // Test code + seconds value
+    // Test code + seconds
     let cm=codeRe.exec(line);
-    if(cm){
-      const code=normCode(cm[1]);const sec=parseSecondsVal(cm[2]);
-      if(sec&&sec<1000){cc=code;tests.push([`${code} s`,sec]);}
-      else cc=code; // Set code even if seconds garbled
-      continue;
-    }
-    // Test code + bare number
+    if(cm){const code=normCode(cm[1]);const sec=parseSecondsVal(cm[2]);if(sec&&sec<1000){cc=code;tests.push([`${code} s`,sec]);}else cc=code;continue;}
     cm=codeRe2.exec(line);
-    if(cm){
-      const code=normCode(cm[1]);const sec=parseFloat(cm[2]);
-      if(sec<1000){cc=code;tests.push([`${code} s`,sec]);}
-      continue;
-    }
-    // Test code with garbled value — still set cc for subsequent Ratio/TR
+    if(cm){const code=normCode(cm[1]);const sec=parseFloat(cm[2]);if(sec<1000){cc=code;tests.push([`${code} s`,sec]);}continue;}
+    // Test code with garbled value
     cm=codeRe3.exec(line);
-    if(cm){
-      const code=normCode(cm[1]);
-      const rest=line.substring(cm[0].length);
-      const nm=rest.match(/([\d.]+)/);
-      if(nm){const sec=parseSecondsVal(nm[1]);if(sec&&sec<1000){cc=code;tests.push([`${code} s`,sec]);continue;}}
-      cc=code;continue;
-    }
-
-    // Ratio line (handles "mea 0.90 Ratio" OCR artifact)
+    if(cm){const code=normCode(cm[1]);const rest=line.substring(cm[0].length);const nm=rest.match(/([\d.]+)/);if(nm){const sec=parseSecondsVal(nm[1]);if(sec&&sec<1000){cc=code;tests.push([`${code} s`,sec]);continue;}}cc=code;continue;}
+    // Ratio
     const rm=line.match(/^(?:mea\s+)?([\d.]+)\s*Ratio/);
     if(rm&&cc){tests.push([`${cc} Ratio`,parseFloat(rm[1])]);continue;}
-
-    // TR line
+    // TR
     const tm=line.match(/^([\d.]+)\s*TR\b/);
     if(tm&&cc){tests.push([`${cc} TR`,parseFloat(tm[1])]);continue;}
+    // QFA/PC-style results (mg/dL or %)
+    for(const{re,nm}of[
+      {re:/(?:^|\s)(QFA\s*Low)\s+(FAILED|[\d.]+)\s*(?:mg\/d[Ll])?/i,nm:'QFA Low'},
+      {re:/(?:^|\s)(QFA)[.]*\s+(FAILED|[\d.]+)[.]?\s*(?:m[go]\/[da][hLl])?/i,nm:'QFA'},
+      {re:/(?:^|\s)(Free\s*PS)\s+(FAILED|[\d.]+)\s*%?/i,nm:'Free PS'},
+      {re:/(?:^|\s)(PC)\s+(FAILED|[\d.]+)\s*%?/i,nm:'PC'}
+    ]){const m=line.match(re);if(m){tests.push([nm,m[2]==='FAILED'?'FAILED':parseFloat(m[2])]);break;}}
   }
   flush();
 }
 
-// ===== RENDER & EXPORT =====
+/* ===== RENDER & EXPORT ===== */
 function renderResults(){
-  if(!parsedData)return;resultsArea.style.display='block';
+  if(!parsedData)return;$('resultsArea').style.display='block';
   const sers=new Set(parsedData.rows.map(r=>r[0]));
   const fc=parsedData.rows.reduce((s,r)=>s+r.filter(c=>c==='FAILED').length,0);
-  statsEl.innerHTML=`<div class="stat-card"><div class="label">Samples</div><div class="value">${parsedData.rows.length}</div></div><div class="stat-card"><div class="label">Instruments</div><div class="value">${sers.size}</div></div><div class="stat-card"><div class="label">Test Columns</div><div class="value">${parsedData.headers.length-2}</div></div><div class="stat-card"><div class="label">Failed</div><div class="value" style="color:${fc>0?'var(--fail)':'var(--success)'}">${fc}</div></div>`;
+  $('stats').innerHTML=`<div class="stat-card"><div class="label">Samples</div><div class="value">${parsedData.rows.length}</div></div><div class="stat-card"><div class="label">Instruments</div><div class="value">${sers.size}</div></div><div class="stat-card"><div class="label">Test Columns</div><div class="value">${parsedData.headers.length-2}</div></div><div class="stat-card"><div class="label">Failed</div><div class="value" style="color:${fc>0?'var(--fail)':'var(--success)'}">${fc}</div></div>`;
   let h='<thead><tr>';for(const c of parsedData.headers)h+=`<th>${c}</th>`;h+='</tr></thead><tbody>';
   for(const r of parsedData.rows){h+='<tr>';for(const c of r)h+=c==='FAILED'?'<td class="failed">FAILED</td>':`<td>${c}</td>`;h+='</tr>';}
-  h+='</tbody>';resultsTable.innerHTML=h;
+  h+='</tbody>';$('resultsTable').innerHTML=h;
 }
 function exportToExcel(){
   if(!parsedData)return;
